@@ -1,8 +1,9 @@
 ﻿using DrinkLab.Model;
+using DrinkLab.Model.Enums;
 
 namespace DrinkLab.Services;
 
-internal class ClienteService
+public class ClienteService
 {
     public static void MenuCliente()
     {
@@ -18,7 +19,7 @@ internal class ClienteService
             Console.WriteLine("4 - Atualizar Cliente");
             Console.WriteLine("5 - Excluir Cliente");
             Console.WriteLine("6 - Visualizar pontuação");
-            Console.WriteLine("0 - Sair para o Menu Principal");
+            Console.WriteLine("0 - Voltar para o Menu Principal");
 
             Console.WriteLine(" =============================");
             Console.Write("Digite uma opção: ");
@@ -65,8 +66,20 @@ internal class ClienteService
         Console.Write("Digite o nome do cliente: ");
         string nomeCliente = Console.ReadLine()!;
 
-        Console.Write("Digite o CPF do cliente: ");
-        string cpfCliente = Console.ReadLine()!;
+        Console.WriteLine("Escolha o Tipo de Documento:");
+        Console.WriteLine("1 - CPF");
+        Console.WriteLine("2 - CNPJ");
+        Console.Write("Opção: ");
+        string opTipoDoc = Console.ReadLine()!;
+
+        TipoDocumento tipoDoc = TipoDocumento.CPF;
+        if (opTipoDoc == "2")
+        {
+            tipoDoc = TipoDocumento.CNPJ;
+        }
+
+        Console.Write("Digite o número do documento (CPF/CNPJ): ");
+        string documentoCliente = Console.ReadLine()!;
 
         Console.Write("Digite o telefone do cliente: ");
         string telefoneCliente = Console.ReadLine()!;
@@ -80,9 +93,9 @@ internal class ClienteService
         Console.Write("Digite a quantidade inicial de pontos: ");
         int qtdPontos = int.Parse(Console.ReadLine()!);
 
-        Cliente novoCliente = new Cliente(
-           nome: nomeCliente, cpf: cpfCliente, telefone: telefoneCliente,
-           email: emailCliente, endereco: enderecoCliente, pontos: qtdPontos
+        Cliente novoCliente = new(
+           nome: nomeCliente, documento: documentoCliente, tipoDocumento: tipoDoc,
+           telefone: telefoneCliente, email: emailCliente, endereco: enderecoCliente, pontos: qtdPontos
         );
 
         int resultadoInsert = Cliente.Inserir(novoCliente);
@@ -110,7 +123,7 @@ internal class ClienteService
         {
             foreach (var cliente in lista)
             {
-                Console.WriteLine($"ID: {cliente.Id} | Nome: {cliente.Nome} | E-mail: {cliente.Email} | Pontos: {cliente.Pontos}");
+                Console.WriteLine($"ID: {cliente.Id} | Nome: {cliente.Nome} | Doc ({cliente.TipoDocumento}): {cliente.Documento} | Pontos: {cliente.Pontos}");
             }
         }
 
@@ -154,7 +167,8 @@ internal class ClienteService
             Console.WriteLine("------ CLIENTE ENCONTRADO ------");
             Console.WriteLine($"ID: {cliente.Id}");
             Console.WriteLine($"Nome: {cliente.Nome}");
-            Console.WriteLine($"CPF: {cliente.Cpf}");
+            Console.WriteLine($"Tipo Documento: {cliente.TipoDocumento}");
+            Console.WriteLine($"Documento: {cliente.Documento}");
             Console.WriteLine($"Telefone: {cliente.Telefone}");
             Console.WriteLine($"E-mail: {cliente.Email}");
             Console.WriteLine($"Endereço: {cliente.Endereco}");
@@ -212,11 +226,12 @@ internal class ClienteService
         Console.WriteLine($"Cliente Selecionado: {cliente.Nome} (ID: {cliente.Id})");
         Console.WriteLine("\n-- O QUE VOCÊ DESEJA ALTERAR? --");
         Console.WriteLine("1 - Nome");
-        Console.WriteLine("2 - CPF");
-        Console.WriteLine("3 - Telefone");
-        Console.WriteLine("4 - E-mail");
-        Console.WriteLine("5 - Endereço");
-        Console.WriteLine("6 - Pontos");
+        Console.WriteLine("2 - Tipo de Documento (CPF/CNPJ)");
+        Console.WriteLine("3 - Número do Documento");
+        Console.WriteLine("4 - Telefone");
+        Console.WriteLine("5 - E-mail");
+        Console.WriteLine("6 - Endereço");
+        Console.WriteLine("7 - Pontos");
         Console.WriteLine("0 - Cancelar");
         Console.Write("Escolha uma opção: ");
 
@@ -231,26 +246,32 @@ internal class ClienteService
                 break;
 
             case "2":
-                Console.Write("Novo CPF: ");
-                cliente.Cpf = Console.ReadLine()!;
+                Console.WriteLine("Novo Tipo de Documento: 1-CPF | 2-CNPJ");
+                string tp = Console.ReadLine()!;
+                cliente.TipoDocumento = (tp == "2") ? TipoDocumento.CNPJ : TipoDocumento.CPF;
                 break;
 
             case "3":
+                Console.Write("Novo Documento: ");
+                cliente.Documento = Console.ReadLine()!;
+                break;
+
+            case "4":
                 Console.Write("Novo Telefone: ");
                 cliente.Telefone = Console.ReadLine()!;
                 break;
 
-            case "4":
+            case "5":
                 Console.Write("Novo E-mail: ");
                 cliente.Email = Console.ReadLine()!;
                 break;
 
-            case "5":
+            case "6":
                 Console.Write("Novo Endereço: ");
                 cliente.Endereco = Console.ReadLine()!;
                 break;
 
-            case "6":
+            case "7":
                 Console.Write("Nova quantidade de pontos: ");
                 if (int.TryParse(Console.ReadLine(), out int novosPontos))
                 {
@@ -418,4 +439,5 @@ internal class ClienteService
         Console.Write("\nPressione qualquer tecla para tentar novamente...");
         Console.ReadKey();
     }
+
 }
