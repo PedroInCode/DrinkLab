@@ -41,7 +41,7 @@ internal class Usuario
             cmd.Parameters.AddWithValue("@Login", usuario.Login);
             cmd.Parameters.AddWithValue("@Senha", usuario.Senha);
 
-            // Certifique-se de que sua classe Banco possui esse método para retornar o ID gerado no INSERT
+            // Certifique-se de que sua classe Banco possui esse método para retornar o ID gerado no INSERT.
             return Banco.ExecutarComandoComRetornoId(cmd);
         }
     }

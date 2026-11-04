@@ -9,7 +9,7 @@ namespace DrinkLab.Data;
 
 public static class Banco
 {
-    private static string stringConnection = "Server=10.91.45.46;Port=3306;Database=bd_adega;Uid=admin;Pwd=12345678";
+    private static string stringConnection = "Server=10.91.45.46;Port=3306;Database=bd_adega;Uid=admin;Pwd=12345678"; //
 
     public static void connectAndTest()
     {
